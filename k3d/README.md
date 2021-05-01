@@ -36,3 +36,6 @@ Route -> name -> httpbin-route, path -> /httpbin2
 
 run `./delete-k3d.sh` to remove *all* your local K3D Kubernetes Cluster(s).
 
+### Apple Silicon Note
+
+1. You will likely receive a `qemu ... core dumped` error when running caused by the image not yet being compiled for ARM64. We are aware and will have those soon.

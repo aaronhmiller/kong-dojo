@@ -25,3 +25,6 @@
 
 4. If you want to evaluate Role Based Access Control (RBAC), uncomment the commented out four lines in the respective YAML file. You will initially login with `kong_admin / KingKong`
 
+### Apple Silicon Note
+
+1. You will likely receive a `qemu ... core dumped` error when running caused by the image not yet being compiled for ARM64. We are aware and will have those soon.

@@ -29,8 +29,8 @@ jobs:
         docker run --network docker-compose_default appropriate/curl -sS --retry 5 --retry-delay 5 --retry-connrefused http://kong-ent1:8001/status
     - name: Load decK, validate and sync
       run: |
-        cat shared/kong.yaml | docker run -i --network docker-compose_default hbagdi/deck --kong-addr http://kong-ent1:8001 -s - validate
-        cat shared/kong.yaml | docker run -i --network docker-compose_default hbagdi/deck --kong-addr http://kong-ent1:8001 -s - sync
+        cat shared/kong.yaml | docker run -i --network docker-compose_default kong/deck --kong-addr http://kong-ent1:8001 -s - validate
+        cat shared/kong.yaml | docker run -i --network docker-compose_default kong/deck --kong-addr http://kong-ent1:8001 -s - sync
     - name: Test proxy key auth
       run: |
         STATUS=$(docker run --rm --network=docker-compose_default kongaaron/just-httpie http://kong-ent1:8000/httpbin -h --pretty=none | grep HTTP | cut -d ' ' -f 2)
@@ -42,7 +42,7 @@ jobs:
       env:
         LIMIT: 3
       run: |
-        docker run --network docker-compose_default kongaaron/just-httpie -f http://kong-ent1:8001/services/httpbin/routes name=customRateLimit paths=/customRateLimit
+        docker run --network docker-compose_default kongaaron/just-httpie -f http://kong-ent1:8001/services/httpbin-service/routes name=customRateLimit paths=/customRateLimit
         docker run --network docker-compose_default kongaaron/just-httpie -f http://kong-ent1:8001/routes/customRateLimit/plugins name=rate-limiting-advanced config.limit=$LIMIT config.sync_rate=10 config.window_size=60
         for (( i=0; i <= $LIMIT; i++ )); do docker run --network docker-compose_default kongaaron/just-httpie http://kong-ent1:8000/customRateLimit; done
         STATUS=$(docker run --rm --network=docker-compose_default kongaaron/just-httpie http://kong-ent1:8000/customRateLimit -h --pretty=none | grep HTTP | cut -d ' ' -f 2)

@@ -22,7 +22,7 @@ jobs:
       env:
         KONG_LICENSE_DATA: ${{ secrets.KONG_LICENSE_DATA }}
       run: |
-        docker-compose -f docker-compose.yaml up -d
+        docker-compose -f docker-compose/docker-compose.yaml up -d
         sleep 2
     - name: Test admin
       run:

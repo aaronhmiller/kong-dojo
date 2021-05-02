@@ -44,4 +44,4 @@ See the corresponding cleanup steps in the sub-directories.
 
 While we have deployed plugins confgured at the Kong `Service` level here, please note that you can also deploy them at the Kong `Route` (which translates to the Kubernetes Ingress rule level) or at the Global (Kubernetes Cluster) level. Those exercises are left to you as you are ready to learn more.
 
-After that, I recommend you try configuring different plugins as well. You can find some helpful syntax in the [Kong Plugin Doc](https://docs.konghq.com/hub/) and [here](https://gist.github.com/nedward/dd445bfa2be781fd9ce32f3122b55895).
+After that, I recommend you try configuring different plugins as well. You can find some helpful syntax in the [Kong Plugin Hub](https://docs.konghq.com/hub/) and [here](https://gist.github.com/nedward/dd445bfa2be781fd9ce32f3122b55895).

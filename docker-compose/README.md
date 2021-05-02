@@ -2,10 +2,10 @@
 
 ### Prerequisites
 
-1. Your [Kong License](https://docs.konghq.com/enterprise/latest/deployment/licenses/deploy-license/) file
-2. [Docker Compose](https://docs.docker.com/compose/install/) installed
+1. [Docker](https://docs.docker.com/get-docker/)
+2. [Docker Compose](https://docs.docker.com/compose/install/)
 
-### Install procedure
+## Installation procedure
 
 1. `export KONG_LICENSE_DATA='<JSON_STRING>'`. You will have received your license string from your Kong representative.
 
@@ -25,6 +25,15 @@
 
 4. If you want to evaluate Role Based Access Control (RBAC), uncomment the commented out four lines in the respective YAML file. You will initially login with `kong_admin / KingKong`
 
-### Apple Silicon Note
+5. Once the software is installed, head over to the [Getting Started Guide](../README.md) for next steps.
 
-1. You will likely receive a `qemu ... core dumped` error when running caused by the image not yet being compiled for ARM64. We are aware and will have those soon.
+## Cleanup
+
+Run `docker-compose down` to stop and remove all containers and the docker network created by the installation procedure.
+
+
+
+##### _NOTE: Apple Silicon users_
+
+You will likely receive a `qemu ... core dumped` error when running caused by the image not yet being compiled for ARM64. We are aware and will have those soon.
+

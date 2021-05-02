@@ -1,0 +1,12 @@
+kind: KongPlugin
+apiVersion: configuration.konghq.com/v1
+metadata:
+  name: ratelimit-httpbin
+config:
+  limit:
+  - 3
+  window_size:
+  - 60
+  sync_rate: 10
+  namespace: foo
+plugin: rate-limiting-advanced

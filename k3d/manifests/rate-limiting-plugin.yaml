@@ -1,0 +1,7 @@
+kind: KongPlugin
+apiVersion: configuration.konghq.com/v1
+metadata:
+  name: ratelimit-httpbin
+config: 
+  minute: 5
+plugin: rate-limiting

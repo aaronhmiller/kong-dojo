@@ -10,13 +10,13 @@ After following the installation instructions in either one of the sub-directori
 
 Run the following commands from within the `kong-dojo/shared` directory. Technically they can be run elsewhere, but we're simplifying the instructions to ease you into things.
 
-#### Using decK
+#### Using decK (applies to all Kong environments)
 
 1. `./apply-proxy.sh ./kong.yaml`
 
    This runs a container of decK (declarative configuration for Kong) and loads the script's argument as the input file, into which we have pre-populated a proxy of the httpbin.org/anything service and applied correlation-id and rate-limiting plugins to.
 
-#### Using kubectl
+#### Using kubectl (applies only when Kong runs within Kubernetes)
 
 1. `kubectl apply -f ../k3d/manifests/httpbin.yaml -n kong-ent` (this deploys a container of httpbin, configuring kong annotations to use the `/anything` path within that service and some plugin annotations that won't take effect until we add their `KongPlugin` definitions later)
 

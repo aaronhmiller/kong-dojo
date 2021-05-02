@@ -2,7 +2,7 @@
 
 A repo to deploy Kong locally to learn about it and its interactions with related deployment infrastructure.
 
-
+[![CI](https://github.com/aaronhmiller/kong-dojo/actions/workflows/validate-kong.yaml/badge.svg)](https://github.com/aaronhmiller/kong-dojo/actions/workflows/validate-kong.yaml)
 
 ## Getting Started
 

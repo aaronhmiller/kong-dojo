@@ -43,7 +43,7 @@ jobs:
         LIMIT: 3
       run: |
         docker run --network docker-compose_default kongaaron/just-httpie -f http://kong-ent1:8001/services/httpbin/routes name=customRateLimit paths=/customRateLimit
-        docker run --network hodocker-compose_defaultst kongaaron/just-httpie -f http://kong-ent1:8001/routes/customRateLimit/plugins name=rate-limiting-advanced config.limit=$LIMIT config.sync_rate=10 config.window_size=60
+        docker run --network docker-compose_default kongaaron/just-httpie -f http://kong-ent1:8001/routes/customRateLimit/plugins name=rate-limiting-advanced config.limit=$LIMIT config.sync_rate=10 config.window_size=60
         for (( i=0; i <= $LIMIT; i++ )); do docker run --network docker-compose_default kongaaron/just-httpie http://kong-ent1:8000/customRateLimit; done
         STATUS=$(docker run --rm --network=docker-compose_default kongaaron/just-httpie http://kong-ent1:8000/customRateLimit -h --pretty=none | grep HTTP | cut -d ' ' -f 2)
         if [ $STATUS -ne 429 ] ; then

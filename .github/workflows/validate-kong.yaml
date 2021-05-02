@@ -29,11 +29,11 @@ jobs:
         docker run --network docker-compose_default appropriate/curl -sS --retry 5 --retry-delay 5 --retry-connrefused http://kong-ent1:8001/status
     - name: Load decK, validate and sync
       run: |
-        docker run --network docker-compose_default --mount type=bind,source="$(pwd)",target=/tmp hbagdi/deck --kong-addr http://kong-ent1:8001 --state /tmp/kong.yaml validate
-        docker run --network docker-compose_default --mount type=bind,source="$(pwd)",target=/tmp hbagdi/deck --kong-addr http://kong-ent1:8001 --state /tmp/kong.yaml sync
+        cat shared/kong.yaml | docker run -i --network docker-compose_default hbagdi/deck --kong-addr http://kong-ent1:8001 -s - validate
+        cat shared/kong.yaml | docker run -i --network docker-compose_default hbagdi/deck --kong-addr http://kong-ent1:8001 -s - sync
     - name: Test proxy key auth
       run: |
-        STATUS=$(docker run --rm --network=docker-compose_default kongaaron/just-httpie http://kong-ent1:8000/keyAuth?apikey=gold -h --pretty=none | grep HTTP | cut -d ' ' -f 2)
+        STATUS=$(docker run --rm --network=docker-compose_default kongaaron/just-httpie http://kong-ent1:8000/httpbin -h --pretty=none | grep HTTP | cut -d ' ' -f 2)
         if [ $STATUS -ne 200 ] ; then
           echo "An unexpected status code of $STATUS was returned."
           exit $STATUS;

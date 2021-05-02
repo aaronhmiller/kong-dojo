@@ -1,0 +1,52 @@
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+    - name: Build the stack
+      env:
+        KONG_LICENSE_DATA: ${{ secrets.KONG_LICENSE_DATA }}
+      run: |
+        docker-compose -f docker-compose-nontls.yaml up -d
+        sleep 2
+    - name: Test admin
+      run:
+        docker run --network host appropriate/curl -sS --retry 5 --retry-delay 5 --retry-connrefused http://kong-ent1:8001/status
+    - name: Load decK, validate and sync
+      run: |
+        docker run --network host --mount type=bind,source="$(pwd)",target=/tmp hbagdi/deck --kong-addr http://kong-ent1:8001 --state /tmp/kong.yaml validate
+        docker run --network host --mount type=bind,source="$(pwd)",target=/tmp hbagdi/deck --kong-addr http://kong-ent1:8001 --state /tmp/kong.yaml sync
+    - name: Test proxy key auth
+      run: |
+        STATUS=$(docker run --rm --network=host kongaaron/just-httpie http://kong-ent1:8000/keyAuth?apikey=gold -h --pretty=none | grep HTTP | cut -d ' ' -f 2)
+        if [ $STATUS -ne 200 ] ; then
+          echo "An unexpected status code of $STATUS was returned."
+          exit $STATUS;
+        fi
+    - name: Test adding rate-limited route
+      env:
+        LIMIT: 3
+      run: |
+        docker run --network host kongaaron/just-httpie -f http://kong-ent1:8001/services/httpbin/routes name=customRateLimit paths=/customRateLimit
+        docker run --network host kongaaron/just-httpie -f http://kong-ent1:8001/routes/customRateLimit/plugins name=rate-limiting-advanced config.limit=$LIMIT config.sync_rate=10 config.window_size=60
+        for (( i=0; i <= $LIMIT; i++ )); do docker run --network host kongaaron/just-httpie http://kong-ent1:8000/customRateLimit; done
+        STATUS=$(docker run --rm --network=host kongaaron/just-httpie http://kong-ent1:8000/customRateLimit -h --pretty=none | grep HTTP | cut -d ' ' -f 2)
+        if [ $STATUS -ne 429 ] ; then
+          echo "An unexpected status code of $STATUS was returned."
+          exit $STATUS;
+        fi

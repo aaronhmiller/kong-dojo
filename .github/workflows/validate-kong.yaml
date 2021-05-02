@@ -26,7 +26,7 @@ jobs:
         sleep 2
     - name: Test admin
       run:
-        docker run --network host appropriate/curl -sS --retry 5 --retry-delay 5 --retry-connrefused http://kong-ent1:8001/status
+        docker run --network kong-dojo_default appropriate/curl -sS --retry 5 --retry-delay 5 --retry-connrefused http://kong-ent1:8001/status
     - name: Load decK, validate and sync
       run: |
         docker run --network host --mount type=bind,source="$(pwd)",target=/tmp hbagdi/deck --kong-addr http://kong-ent1:8001 --state /tmp/kong.yaml validate

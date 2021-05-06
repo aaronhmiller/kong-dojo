@@ -41,9 +41,9 @@ jobs:
     - name: Test correlation plugin
       run: |
         STATUS=$(docker run --rm --network=docker-compose_default kongaaron/just-httpie http://kong-ent1:8000/httpbin -h --pretty=none | grep Kong-Request-ID | cut -d ':' -f 1)
-        if [ $STATUS != 'Kong-Request' ] ; then
+        if [ $STATUS != 'Kong-Request-ID' ] ; then
           echo "The expected header of Kong-Request-ID was not matched. $STATUS was returned instead."
-          exit $STATUS;
+          exit 2;
         fi
     - name: Test adding rate-limited route
       env:

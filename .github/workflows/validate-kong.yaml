@@ -31,7 +31,7 @@ jobs:
       run: |
         cat shared/kong.yaml | docker run -i --network docker-compose_default kong/deck --kong-addr http://kong-ent1:8001 -s - validate
         cat shared/kong.yaml | docker run -i --network docker-compose_default kong/deck --kong-addr http://kong-ent1:8001 -s - sync
-    - name: Test proxy key auth
+    - name: Test proxy
       run: |
         STATUS=$(docker run --rm --network=docker-compose_default kongaaron/just-httpie http://kong-ent1:8000/httpbin -h --pretty=none | grep HTTP | cut -d ' ' -f 2)
         if [ $STATUS -ne 200 ] ; then
@@ -41,7 +41,7 @@ jobs:
     - name: Test correlation plugin
       run: |
         STATUS=$(docker run --rm --network=docker-compose_default kongaaron/just-httpie http://kong-ent1:8000/httpbin -h --pretty=none | grep Kong-Request-ID | cut -d ':' -f 1)
-        if [ $STATUS -ne 'Kong-Request-ID' ] ; then
+        if [ $STATUS != 'Kong-Request-ID' ] ; then
           echo "The expected header of Kong-Request-ID was not matched. $STATUS was returned instead."
           exit $STATUS;
         fi

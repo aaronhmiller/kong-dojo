@@ -8,5 +8,6 @@ config:
   window_size:
   - 60
   sync_rate: 10
+  # required while FTI-2515 being fixed
   namespace: foo
 plugin: rate-limiting-advanced

@@ -226,6 +226,8 @@ ingressController:
   enabled: true
   installCRDs: false
   env:
+    # https://docs.konghq.com/kubernetes-ingress-controller/1.2.x/troubleshooting/#dumping-generated-kong-configuration
+    dump_config: enabled
     kong_admin_token:
       valueFrom:
         secretKeyRef:
